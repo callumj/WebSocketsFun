@@ -1,0 +1,34 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+	<title>paint screen</title>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+	
+	var socket = new WebSocket("ws://" + window.location.hostname +":8080");
+	socket.onopen = function(){  
+		pin = prompt("Pin please");
+		socket.send("PIN:" + pin);
+	}
+	
+	socket.onmessage = function(msg) {
+		payload = jQuery.parseJSON(msg.data);
+		if (payload != null && payload.event != null)
+		{
+			dot = $("<div style=\"position: absolute; top: " + payload.y + "%; left: " + payload.x + "%; width: 10px; height: 10px; background-color: black\"></div>");
+			$("body").append(dot);
+		}
+	}
+	
+	</script>
+</head>
+
+<body>
+
+
+</body>
+</html>

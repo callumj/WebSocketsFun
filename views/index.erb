@@ -1,0 +1,29 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+	<title>index</title>
+	<script type="text/javascript">
+	
+	var socket = new WebSocket("ws://" + window.location.hostname +":8080");
+	socket.onopen = function(){  
+	    alert("Socket has been opened!");
+		pin = prompt("Pin please");
+		socket.send("PIN:" + pin);
+	}
+	
+	socket.onmessage = function(msg) {
+		alert(msg.data);
+	}
+	
+	</script>
+</head>
+
+<body>
+
+
+</body>
+</html>
