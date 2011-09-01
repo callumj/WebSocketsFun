@@ -1,7 +1,6 @@
-require 'eventmachine'
-require 'em-websocket'
-require 'sinatra'
-require 'thin'
+require "bundler"
+Bundler.setup
+Bundler.require
 
 load "#{File.dirname(__FILE__)}/client_manager.rb"
 
