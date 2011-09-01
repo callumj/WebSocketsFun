@@ -21,6 +21,10 @@ class ClientManager
     results
   end
   
+  def remove(client)
+    self.clients.delete(client)
+  end
+  
   def self.instance(type)
     @@instances = {} if @@instances == nil
     @@instances[type.to_sym] = self.new if @@instances[type.to_sym] == nil

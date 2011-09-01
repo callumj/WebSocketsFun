@@ -19,7 +19,7 @@
 		payload = jQuery.parseJSON(msg.data);
 		if (payload != null && payload.event != null)
 		{
-			dot = $("<div style=\"position: absolute; top: " + payload.y + "%; left: " + payload.x + "%; width: 10px; height: 10px; background-color: black\"></div>");
+			dot = $("<div style=\"position: absolute; top: " + payload.y + "%; left: " + payload.x + "%; width: 2%; height: 2%; background-color: black\"></div>");
 			$("body").append(dot);
 		}
 	}

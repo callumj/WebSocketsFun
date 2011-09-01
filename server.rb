@@ -29,6 +29,7 @@ module EchoServer
   end
 
   def unbind
+    ClientManager.instance(:device).remove(self)
   end
 end
 
@@ -40,7 +41,7 @@ EventMachine.run {
       ws.onopen {
       }
 
-      ws.onclose { puts "Connection closed" }
+      ws.onclose { ClientManager.instance(:client).remove(ws) }
       ws.onmessage { |msg|
         match_data = msg.strip.match(/PIN:(\d+)/)
         if (match_data != nil && match_data.length > 1)
@@ -59,7 +60,7 @@ EventMachine.run {
       ws.onopen {
       }
 
-      ws.onclose { puts "Connection closed" }
+      ws.onclose { ClientManager.instance(:device).remove(ws) }
       ws.onmessage { |data|
         puts data
         match_data = data.strip.match(/PIN:(\d+)/)
@@ -80,7 +81,12 @@ EventMachine.run {
   #The web man
   class WebHelper < Sinatra::Base
       get "/:view" do
-        erb params[:view].to_sym
+        if File.exists?("#{File.dirname(__FILE__)}/views/#{params[:view]}.erb")
+          erb params[:view].to_sym
+        else
+          status 404
+          ""
+        end
       end
       
       get '/' do
