@@ -4,10 +4,18 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-
+	<style type="text/css" media="screen">
+		.dot {
+			-moz-border-radius: 25%;
+			border-radius: 25%;
+		}
+	</style>
 	<title>paint screen</title>
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js" type="text/javascript" charset="utf-8"></script>
 	<script type="text/javascript">
+	var previousX = null;
+	var previousY = null;
+	
 	
 	var socket = new WebSocket("ws://" + window.location.hostname +":8080");
 	socket.onopen = function(){  
@@ -19,8 +27,27 @@
 		payload = jQuery.parseJSON(msg.data);
 		if (payload != null && payload.event != null)
 		{
-			dot = $("<div style=\"position: absolute; top: " + payload.y + "%; left: " + payload.x + "%; width: 2%; height: 2%; background-color: black\"></div>");
+			payload.x = Math.round(payload.x * 1000) / 1000;
+			payload.y = Math.round(payload.y * 1000) / 1000;
+			
+			if (previousX != null) {
+				//props to http://www.p01.org/releases/Drawing_lines_in_JavaScript/
+				var lineLength = Math.sqrt( (previousX-payload.x)*(previousX-payload.x)+(previousY-payload.y)*(previousY-payload.y));
+				for( var i=0; i<lineLength; i++ )
+				{
+					x_val = Math.round(previousX+(payload.x-previousX)*i/lineLength);
+					y_val = Math.round(previousY+(payload.y-previousY)*i/lineLength);
+									
+					dot = $("<div class=\"dot\" style=\"position: absolute; top: " + y_val + "%; left: " + x_val + "%; width: 2%; height: 2%; background-color: black\"></div>");
+					$("body").append(dot);
+				}
+			}
+			
+			dot = $("<div class=\"dot\" style=\"position: absolute; top: " + payload.y + "%; left: " + payload.x + "%; width: 2%; height: 2%; background-color: black\"></div>");
 			$("body").append(dot);
+			
+			previousX = payload.x;
+			previousY = payload.y;
 		}
 	}
 	
