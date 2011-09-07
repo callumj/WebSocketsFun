@@ -17,7 +17,7 @@
 	var previousY = null;
 	
 	
-	var socket = new WebSocket("ws://" + window.location.hostname +":8080");
+	var socket = new WebSocket("ws://" + window.location.hostname +":8090");
 	socket.onopen = function(){  
 		pin = prompt("Pin please");
 		socket.send("PIN:" + pin);

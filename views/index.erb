@@ -8,7 +8,7 @@
 	<title>index</title>
 	<script type="text/javascript">
 	
-	var socket = new WebSocket("ws://" + window.location.hostname +":8080");
+	var socket = new WebSocket("ws://" + window.location.hostname +":8090");
 	socket.onopen = function(){  
 	    alert("Socket has been opened!");
 		pin = prompt("Pin please");

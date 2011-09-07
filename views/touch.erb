@@ -129,7 +129,7 @@
 		
 		function registerEvents()
 		{
-			socketServer = new WebSocket("ws://" + window.location.hostname +":8082");
+			socketServer = new WebSocket("ws://" + window.location.hostname +":8092");
 			socketServer.onopen = function(){  
 				pin = prompt("Pin please");
 				socketServer.send("PIN:" + pin);
