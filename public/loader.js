@@ -25,26 +25,22 @@ function bootup()
 					x_val = Math.round(previousX+(payload.x-previousX)*i/lineLength);
 					y_val = Math.round(previousY+(payload.y-previousY)*i/lineLength);
 								
-					dot = $("<div class=\"dot\" style=\"position: absolute; top: " + y_val + "%; left: " + x_val + "%; width: 2%; height: 2%; background-color: black\"></div>");
+					dot = $("<div class=\"dot\" style=\"z-index: 99; position: absolute; top: " + y_val + "%; left: " + x_val + "%; width: 1.5%; height: 1.5%; background-color: black\"></div>");
 					$("body").append(dot);
 				}
 			}
 		
-			dot = $("<div class=\"dot\" style=\"position: absolute; top: " + payload.y + "%; left: " + payload.x + "%; width: 2%; height: 2%; background-color: black\"></div>");
+			dot = $("<div class=\"dot\" style=\"z-index: 99; position: absolute; top: " + payload.y + "%; left: " + payload.x + "%; width: 1.5%; height: 1.5%; background-color: black\"></div>");
 			$("body").append(dot);
 		
 			previousX = payload.x;
 			previousY = payload.y;
+			
+			if (payload.event == "up")
+				previousX = null;
 		}
 	}
 }
-/*
-
-jquery_inject=document.createElement('scr'+'ipt');
-jquery_inject.setAttribute("type", "text/javscript");
-jquery_inject.setAttribute("src", "http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js");
-jquery_inject.setAttribute("charset", "utf-8");
-document.body.appendChild(jquery_inject);*/
 
 var head= document.getElementsByTagName('head')[0];
 var script= document.createElement('script');
