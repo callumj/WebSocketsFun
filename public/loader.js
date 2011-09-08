@@ -25,12 +25,12 @@ function bootup()
 					x_val = Math.round(previousX+(payload.x-previousX)*i/lineLength);
 					y_val = Math.round(previousY+(payload.y-previousY)*i/lineLength);
 								
-					dot = $("<div class=\"dot\" style=\"z-index: 99; position: absolute; top: " + y_val + "%; left: " + x_val + "%; width: 1.5%; height: 1.5%; background-color: black\"></div>");
+					dot = $("<div class=\"dot\" style=\"z-index: 2000; position: absolute; top: " + y_val + "%; left: " + x_val + "%; width: 1.5%; height: 1.5%; background-color: black\"></div>");
 					$("body").append(dot);
 				}
 			}
 		
-			dot = $("<div class=\"dot\" style=\"z-index: 99; position: absolute; top: " + payload.y + "%; left: " + payload.x + "%; width: 1.5%; height: 1.5%; background-color: black\"></div>");
+			dot = $("<div class=\"dot\" style=\"z-index: 2000; position: absolute; top: " + payload.y + "%; left: " + payload.x + "%; width: 1.5%; height: 1.5%; background-color: black\"></div>");
 			$("body").append(dot);
 		
 			previousX = payload.x;
