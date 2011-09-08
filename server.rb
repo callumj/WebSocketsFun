@@ -63,6 +63,11 @@ end
 
 #The web man
 class WebHelper < Sinatra::Base
+    before do
+      @mobile = request.user_agent.match(/Mobile\/\w+\s+Safari\/\d+.*\d*/) != nil
+      @domain = request.host
+    end
+    
     get "/:view.html" do
       if File.exists?("#{File.dirname(__FILE__)}/views/#{params[:view]}.erb")
         erb params[:view].to_sym
@@ -73,14 +78,26 @@ class WebHelper < Sinatra::Base
     end
     
     get "/loader.js" do
-      contents = ""
-      File.open("#{File.dirname(__FILE__)}/public/loader.js").each_line{ |s| contents << "#{s}" }
       content_type("text/javascript")
-      contents
+      if @mobile
+        Mustache.render_file("public/sender.js", {:domain => request.host})
+      else
+        Mustache.render_file("public/receiver.js", {:domain => request.host})
+      end
+    end
+    
+    get "/receiver.js" do
+      content_type("text/javascript")
+      Mustache.render_file("public/receiver.js", {:domain => request.host})
+    end
+    
+    get "/sender.js" do
+      content_type("text/javascript")
+      Mustache.render_file("public/sender.js", {:domain => request.host})
     end
     
     get '/' do
-      if request.user_agent.match(/Mobile\/\w+\s+Safari\/\d+.*\d*/) != nil
+      if @mobile
         redirect to("/touch.html")
       else
         redirect to("/maps_screen.html")

@@ -1,0 +1,116 @@
+var previousX = null;
+var previousY = null;
+
+var block = false;
+
+function bootup()
+{
+	var socket = new WebSocket("ws://{{ domain }}:8090");
+	socket.onopen = function(){  
+		pin = prompt("Pin please");
+		socket.send("PIN:" + pin);
+	}
+
+	socket.onmessage = function(msg) {
+		payload = jQuery.parseJSON(msg.data);
+		if (payload != null && payload.event != null)
+		{
+			payload.x = (window.innerWidth * (payload.x / 100)) + window.pageXOffset;
+			payload.y = (window.innerHeight * (payload.y / 100)) + window.pageYOffset;
+			
+			if (payload.event == "down")
+			{
+				previousX = null;
+				previousY = null;
+			}
+			
+			switch(document.domain)
+			{
+				case "facebook.com" :
+				{
+					if (payload.event == "down")
+						block = false;
+					
+					if (block && payload.event == "move")
+						return;
+					
+					if (previousX != null)
+					{
+						if (Math.abs(previousX - payload.x) > 30)
+						{
+							if (payload.x > previousX)
+								$(".photoPageNextNav").click();
+							else
+								$(".photoPagePrevNav").click();
+	
+							block = true;
+						}
+					}
+				}
+				break;
+				
+				case "www.flickr.com" :
+				{
+					if (payload.event == "down")
+						block = false;
+					
+					if (block && payload.event == "move")
+						return;
+					
+					if (previousX != null)
+					{
+						if (Math.abs(previousX - payload.x) > 30)
+						{
+							if (payload.x > previousX)
+								$("#nav-bar-next").click();
+							else
+								$("nav-bar-prev").click();
+	
+							block = true;
+						}
+					}
+				}
+				break;
+				
+				default:
+				{
+
+					if (previousX != null) {
+						//props to http://www.p01.org/releases/Drawing_lines_in_JavaScript/
+						var lineLength = Math.sqrt( (previousX-payload.x)*(previousX-payload.x)+(previousY-payload.y)*(previousY-payload.y));
+						for( var i=0; i<lineLength; i++ )
+						{
+
+							x_val = Math.round(previousX+(payload.x-previousX)*i/lineLength);
+							y_val = Math.round(previousY+(payload.y-previousY)*i/lineLength);
+
+							dot = $("<div class=\"dot\" style=\"z-index: 2000; position: absolute; top: " + y_val + "px; left: " + x_val + "px; width: 1.5%; height: 1.5%; background-color: black\"></div>");
+							$("body").append(dot);
+						}
+					}
+
+					dot = $("<div class=\"dot\" style=\"z-index: 2000; position: absolute; top: " + payload.y + "px; left: " + payload.x + "px; width: 1.5%; height: 1.5%; background-color: black\"></div>");
+					$("body").append(dot);
+				}
+				break;
+			}
+			
+			previousX = payload.x;
+			previousY = payload.y;
+
+			if (payload.event == "up")
+			{
+				previousX = null;
+				previousY = null;
+			}
+		}
+	}
+}
+
+var head= document.getElementsByTagName('head')[0];
+var script= document.createElement('script');
+script.type= 'text/javascript';
+script.src= 'http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js';
+head.appendChild(script);
+
+bootup();
